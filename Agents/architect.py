@@ -125,3 +125,27 @@ def architect_ensemble(
     raw_sqls = list(dict.fromkeys(raw_sqls))[:max_candidates]
 
     results: List[ArchitectCandidate] = []
+    # ---- Validate but DO NOT DROP ----
+    for sql in raw_sqls:
+        candidate = {
+            "sql": sql,
+            "intent": classify_intent(sql),
+            "expected_shape": infer_output_shape(sql),
+        }
+
+        if not validate_sql(sql, schema):
+            candidate["weak"] = True
+
+        results.append(candidate)
+
+    # ---- HARD FALLBACK (NON-NEGOTIABLE) ----
+    if not results and raw_sqls:
+        results.append({
+            "sql": raw_sqls[0],
+            "intent": classify_intent(raw_sqls[0]),
+            "expected_shape": infer_output_shape(raw_sqls[0]),
+            "weak": True
+        })
+
+    return results
+
