@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  axiom:
+    build: .
+    container_name: axiom-sql-reflex
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    tty: true
+    stdin_open: true

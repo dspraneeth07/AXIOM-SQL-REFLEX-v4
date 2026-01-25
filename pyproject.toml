@@ -1,0 +1,106 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "axiom-sql-reflex"
+version = "0.1.0"
+description = "Execution-aware, multi-agent Text-to-SQL system with semantic validation"
+readme = "README.md"
+license = { file = "LICENSE" }
+
+authors = [
+  { name = "Dhadi Sai Praneeth Reddy", email = "spreddydhadi@gmail.com" }
+]
+
+maintainers = [
+  { name = "Dhadi Sai Praneeth Reddy" }
+]
+
+requires-python = ">=3.10"
+
+keywords = [
+  "text-to-sql",
+  "llm-systems",
+  "agentic-ai",
+  "database-reasoning",
+  "execution-grounded-evaluation",
+  "research"
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Database",
+]
+
+dependencies = [
+  # Core execution & data
+  "duckdb>=0.9.2",
+  "pandas>=1.5",
+  "numpy>=1.23",
+
+  # Graph & retrieval
+  "networkx>=3.1",
+  "faiss-cpu>=1.7.4",
+
+  # NLP / embeddings
+  "sentence-transformers>=2.2.2",
+  "transformers>=4.36",
+
+  # Local LLM runtime
+  "llama-cpp-python>=0.2.20",
+
+  # Utilities
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "ruff",
+  "mypy",
+  "pytest",
+]
+
+viz = [
+  "matplotlib",
+  "seaborn",
+]
+
+notebooks = [
+  "jupyter",
+  "ipykernel",
+]
+
+[project.urls]
+Homepage = "https://github.com/dspraneeth07/Axiom-SQL-Reflex-v4"
+Repository = "https://github.com/dspraneeth07/Axiom-SQL-Reflex-v4"
+Issues = "https://github.com/dspraneeth07/Axiom-SQL-Reflex-v4/issues"
+
+[tool.setuptools]
+packages = ["axiom_sql_reflex"]
+
+[tool.setuptools.package-data]
+axiom_sql_reflex = ["py.typed"]
+
+dependencies = [
+  ...
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+]
+
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.ruff]
+select = ["E", "F", "I"]
+ignore = ["E501"]

@@ -5,3 +5,22 @@ __pycache__/
 models/
 data/bird/databases/__MACOSX/
 *.log
+
+# Virtual environments
+venv/
+.env/
+
+# Models & data
+models/
+data/
+schemas/**/*.pkl
+
+# Python
+__pycache__/
+*.pyc
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
