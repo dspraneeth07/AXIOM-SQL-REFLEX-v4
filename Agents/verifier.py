@@ -67,3 +67,54 @@ def get_sandbox_connection(
 
     con.execute("SET schema 'spider_db';")
     return con
+
+# =============================
+# Cost & Safety Analysis
+# =============================
+
+def explain_cost(
+    con: duckdb.DuckDBPyConnection,
+    sql: str
+) -> str:
+    try:
+        rows = con.execute(
+            f"EXPLAIN ANALYZE {sql}"
+        ).fetchall()
+        return "\n".join(r[0] for r in rows)
+    except Exception as e:
+        raise RuntimeError(str(e)) from e
+
+
+def estimate_row_count(
+    con: duckdb.DuckDBPyConnection,
+    sql: str
+) -> int:
+    try:
+        sql_clean = sql.strip().rstrip(";")
+        wrapped = f"SELECT COUNT(*) FROM ({sql_clean}) t"
+        return int(con.execute(wrapped).fetchone()[0])
+    except Exception:
+        return -1
+
+
+# =============================
+# Execution Helpers
+# =============================
+
+def execute_with_timeout(
+    con: duckdb.DuckDBPyConnection,
+    sql: str,
+    timeout_sec: float
+):
+    sql_clean = sql.strip().rstrip(";")
+    start = time.time()
+
+    df = con.execute(sql_clean).fetchdf()
+    latency = time.time() - start
+
+    if latency > timeout_sec:
+        raise TimeoutError(
+            f"Query exceeded {timeout_sec:.2f}s"
+        )
+
+    return df, latency
