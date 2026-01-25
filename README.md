@@ -132,6 +132,52 @@ This demonstrates how LLM agents can safely interact with real databases.
 
 ## Architecture
 
+```mermaid
+flowchart TD
+    U[User Question] --> C[GraphRAG Cartographer]
+
+    subgraph Schema Intelligence
+        C -->|Schema Graph| SG[(Tables · Columns · FKs)]
+        C -->|Dense + Lexical Retrieval| R[FAISS + BM25]
+    end
+
+    SG --> A[Architect Ensemble]
+    R --> A
+
+    subgraph SQL Generation
+        A --> L1[DeepSeek-Coder 6.7B]
+        A --> L2[Mistral-7B-Instruct]
+        L1 --> SQ[SQL Candidates]
+        L2 --> SQ
+    end
+
+    SQ --> V[Execution Verifier]
+
+    subgraph Safety & Execution
+        V -->|EXPLAIN ANALYZE| Cost[Cost Gating]
+        V -->|Timeout + Row Caps| Sandbox[DuckDB Sandbox]
+        V -->|WRITE?| DryRun[Dry-Run Transaction]
+    end
+
+    Sandbox --> CR[Semantic Critic]
+    DryRun --> CR
+
+    subgraph Semantic Validation
+        CR --> Rules[Rule Checks]
+        CR --> L3[TinyLlama Critic]
+    end
+
+    Rules --> O[Reflex Orchestrator]
+    L3 --> O
+
+    O -->|Retry / Route| C
+    O -->|Retry / Regenerate| A
+    O -->|Converged| F[Final Answer]
+
+    style U fill:#fff,stroke:#000
+    style F fill:#fff,stroke:#000
+```
+
 User Question
 
 ↓
