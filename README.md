@@ -174,8 +174,6 @@ flowchart TD
     O -->|Retry / Regenerate| A
     O -->|Converged| F[Final Answer]
 
-    style U fill:#fff,stroke:#000
-    style F fill:#fff,stroke:#000
 ```
 
 User Question
